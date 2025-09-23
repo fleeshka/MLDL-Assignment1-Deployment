@@ -13,10 +13,9 @@ if st.button("Analyze"):
             "http://api:8000/classify", json={"text": user_question}
         )
         if response_class.status_code == 200:
-            classifications = response_class.json()["classification"]
+            result = response_class.json()
             st.subheader("Question tag:")
-            for cls in classifications:
-                st.write(f"{cls['label']} (score: {cls['score']:.2f})")
+            st.write(f"{result['label']} (score: {result['score']:.2f})")
         else:
             st.error("Smth went wrong")
 
