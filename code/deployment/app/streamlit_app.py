@@ -1,51 +1,32 @@
-# streamlit_app.py
-
 import streamlit as st
-
 import requests
 
-# FastAPI endpoint
+st.title("Technical Assistant")
 
-FASTAPI_URL = "http://fastapi:8000/predict"
+user_question = st.text_area("Enter your question")
 
-# Streamlit app UI
+if st.button("Analyze"):
+    if user_question.strip() == "":
+        st.warning("Enter your question")
+    else:
+        response_class = requests.post(
+            "http://api:8000/classify", json={"text": user_question}
+        )
+        if response_class.status_code == 200:
+            classifications = response_class.json()["classification"]
+            st.subheader("Question tag:")
+            for cls in classifications:
+                st.write(f"{cls['label']} (score: {cls['score']:.2f})")
+        else:
+            st.error("Smth went wrong")
 
-st.title("Iris Flower Classifier")
 
-# Input fields for the Iris flower data
-
-sepal_length = st.number_input("Sepal Length", min_value=0.0)
-
-sepal_width = st.number_input("Sepal Width", min_value=0.0)
-
-petal_length = st.number_input("Petal Length", min_value=0.0)
-
-petal_width = st.number_input("Petal Width", min_value=0.0)
-
-# Make prediction when the button is clicked
-
-if st.button("Predict"):
-    # Prepare the data for the API request
-
-    input_data = {
-
-        "sepal_length": sepal_length,
-
-        "sepal_width": sepal_width,
-
-        "petal_length": petal_length,
-
-        "petal_width": petal_width
-
-    }
-
-    # Send a request to the FastAPI prediction endpoint
-
-    response = requests.post(FASTAPI_URL, json=input_data)
-
-    prediction = response.json()["prediction"]
-
-    # Display the result
-
-    st.success(f"The model predicts class: {prediction}")
-
+        response_gen = requests.post(
+            "http://api:8000/generate", json={"text": user_question}
+        )
+        if response_gen.status_code == 200:
+            answer = response_gen.json()["answer"]
+            st.subheader("Possible answer")
+            st.write(answer)
+        else:
+            st.error("Smth went wrong")
