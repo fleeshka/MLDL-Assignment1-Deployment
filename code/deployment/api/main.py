@@ -2,9 +2,7 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from transformers import pipeline
 
-
-
-classifier = pipeline("text-classification", model="models/classifier")
+classifier = pipeline("text-classification", model="models/classifier", top_k=3)
 generator = pipeline("text2text-generation", model="models/generator")
 
 app = FastAPI(title="Tech Assistant API")
@@ -15,7 +13,6 @@ class InputQuestion(BaseModel):
 @app.post("/classify")
 def classify_question(data: InputQuestion):
     results = classifier(data.text)
-    # возвращаем топ-3 категорий
     return {"classification": results}
 
 
