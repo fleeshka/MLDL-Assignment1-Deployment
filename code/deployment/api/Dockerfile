@@ -1,24 +1,14 @@
-# Use an official Python runtime as a parent image
-
-FROM python:3.9
-
-# Set the working directory
+FROM python:3.10-slim
 
 WORKDIR /app
 
-# Copy the current directory contents into the container at /app
+COPY ./deployment/api/requirements.txt ./requirements.txt
 
-COPY ../../.. /app
+RUN pip install --upgrade pip
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Install the necessary packages
+COPY . .
+COPY models/ ./models/
 
-RUN pip install fastapi uvicorn scikit-learn
 
-# Expose port 80 to the outside world
-
-EXPOSE 80
-
-# Run the FastAPI server
-
-CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "80"]
-
+CMD ["uvicorn", "deployment.api.main:app", "--host", "0.0.0.0", "--port", "8000"]

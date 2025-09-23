@@ -1,17 +1,14 @@
-# Streamlit Dockerfile
-FROM python:3.9
+FROM python:3.10-slim
 
-# Set the working directory
 WORKDIR /app
 
-# Copy the current directory contents into the container at /app
-COPY frontend /app
+COPY ./deployment/app/requirements.txt ./requirements.txt
 
-# Install the dependencies
-RUN pip install streamlit requests
 
-# Expose the default Streamlit port
-EXPOSE 8501
+RUN pip install --upgrade pip
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Command to run the Streamlit app
-CMD ["streamlit", "run", "streamlit_app.py", "--server.port=8501", "--server.address=0.0.0.0"]
+
+COPY . .
+
+CMD ["streamlit", "run", "deployment/app/streamlit_app.py", "--server.port=8501", "--server.address=0.0.0.0"]

@@ -1,0 +1,20 @@
+version: "3.9"
+
+services:
+  api:
+    build:
+      context: ./code
+      dockerfile: deployment/api/Dockerfile
+    container_name: api
+    ports:
+      - "8000:8000"
+
+  app:
+    build:
+      context: ./code
+      dockerfile: deployment/app/Dockerfile
+    container_name: tech_web
+    ports:
+      - "8501:8501"
+    depends_on:
+      - api
