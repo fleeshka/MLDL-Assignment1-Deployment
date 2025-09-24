@@ -17,8 +17,8 @@ def save_models():
     """
 
     # Create directories for model storage
-    os.makedirs("code/models/classifier", exist_ok=True)
-    os.makedirs("code/models/generator", exist_ok=True)
+    os.makedirs("../code/models/classifier", exist_ok=True)
+    os.makedirs("../code/models/generator", exist_ok=True)
 
     # Save sentiment analysis classifier
     print("Saving classification model...")
